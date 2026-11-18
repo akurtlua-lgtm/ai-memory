@@ -3233,6 +3233,7 @@ mod slow {
         let output = shell_script_command(&repo_root().join("bin/ai-memory"))
             .arg("upgrade")
             .env("AI_MEMORY_DOCKER", &docker)
+            .env("AI_MEMORY_NATIVE_BIN", env!("CARGO_BIN_EXE_ai-memory"))
             .env("AI_MEMORY_SKIP_SELF_UPGRADE", "1")
             .env("AI_MEMORY_SERVER_URL", "http://192.168.0.90:49374")
             .env("HOME", tmp.path())
