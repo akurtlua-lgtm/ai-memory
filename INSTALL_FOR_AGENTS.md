@@ -3,12 +3,19 @@
 You are an AI coding agent and your user asked you to install ai-memory. It
 takes two commands, and neither needs root or administrator rights.
 
+If the fork has yet to publish a tagged release, install from source using Rust
+1.95 and continue with step 2.
+
+```bash
+cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
+```
+
 1. Install the release binary. The script checks the download against the
    release's published SHA-256 checksum, puts the binary under
    `~/.local/lib/ai-memory` and links `~/.local/bin/ai-memory` to it:
 
    ```bash
-   curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+   curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
    ```
 
    If `~/.local/bin` is not on `PATH`, call `~/.local/bin/ai-memory` directly
@@ -18,7 +25,7 @@ takes two commands, and neither needs root or administrator rights.
    under `%LOCALAPPDATA%\Programs\ai-memory` and adds it to the user `PATH`:
 
    ```powershell
-   irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+   irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
    ```
 
    A shell started before the install does not see the new `PATH`; call

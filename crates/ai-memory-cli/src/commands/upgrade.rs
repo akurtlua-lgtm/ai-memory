@@ -44,7 +44,7 @@ use crate::commands::install_hooks;
 use crate::config::Config;
 use crate::install_layout::{HOOKS_DIR_NAME, shipped_binary_name};
 
-const RELEASE_OWNER_REPO: &str = "akitaonrails/ai-memory";
+const RELEASE_OWNER_REPO: &str = "akurtlua-lgtm/ai-memory";
 const USER_AGENT: &str = concat!("ai-memory-cli/", env!("CARGO_PKG_VERSION"));
 /// Hard cap on any single upgrade HTTP body (release tarball, `.sha256`,
 /// or tag JSON). Current release archives are ~15–17 MiB; 128 MiB leaves
@@ -2108,7 +2108,7 @@ mod tests {
     #[test]
     fn release_base_url_prefers_config_override() {
         let mut config = Config::default();
-        assert!(release_base_url(&config).contains("github.com/akitaonrails/ai-memory/releases"));
+        assert!(release_base_url(&config).contains("github.com/akurtlua-lgtm/ai-memory/releases"));
         config.release_base_url = Some(" http://127.0.0.1:9/releases ".into());
         assert_eq!(release_base_url(&config), "http://127.0.0.1:9/releases");
     }

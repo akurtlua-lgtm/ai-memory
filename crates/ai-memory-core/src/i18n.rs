@@ -65,17 +65,33 @@ pub enum Language {
     /// Brazilian Portuguese.
     #[serde(rename = "pt-BR", alias = "pt", alias = "pt_BR")]
     PortugueseBrazil,
+    /// Simplified Chinese.
+    #[serde(
+        rename = "zh-CN",
+        alias = "zh",
+        alias = "zh_CN",
+        alias = "zh-Hans",
+        alias = "zh-Hans-CN",
+        alias = "zh-SG",
+        alias = "zh-Hans-SG"
+    )]
+    ChineseSimplified,
 }
 
 impl Language {
     /// All compiled interface languages. Keep router-owned catalogs in sync with this list.
-    pub const ALL: &[Self] = &[Self::English, Self::PortugueseBrazil];
+    pub const ALL: &[Self] = &[
+        Self::English,
+        Self::PortugueseBrazil,
+        Self::ChineseSimplified,
+    ];
 
     /// Canonical HTML/HTTP language tag.
     pub const fn tag(self) -> &'static str {
         match self {
             Self::English => "en",
             Self::PortugueseBrazil => "pt-BR",
+            Self::ChineseSimplified => "zh-CN",
         }
     }
 
@@ -136,7 +152,10 @@ impl FromStr for Language {
         match normalized.as_str() {
             "en" | "en-us" | "en-gb" | "c" | "posix" => Ok(Self::English),
             "pt" | "pt-br" => Ok(Self::PortugueseBrazil),
-            _ => Err("supported languages: en, pt-BR"),
+            "zh" | "zh-cn" | "zh-hans" | "zh-hans-cn" | "zh-sg" | "zh-hans-sg" => {
+                Ok(Self::ChineseSimplified)
+            }
+            _ => Err("supported languages: en, pt-BR, zh-CN"),
         }
     }
 }
@@ -512,12 +531,7 @@ impl Localizer {
 }
 
 fn bundle(language: Language) -> FluentBundle<FluentResource> {
-    let tag = match language {
-        Language::English => unic_langid::LanguageIdentifier::from_str("en").unwrap_or_default(),
-        Language::PortugueseBrazil => {
-            unic_langid::LanguageIdentifier::from_str("pt-BR").unwrap_or_default()
-        }
-    };
+    let tag = unic_langid::LanguageIdentifier::from_str(language.tag()).unwrap_or_default();
     let mut bundle = FluentBundle::new_concurrent(vec![tag]);
     // Paths, flags and identifiers must remain copyable in terminal output.
     // Web templates escape values at the final HTML boundary.
@@ -613,6 +627,13 @@ fn sources(language: Language) -> [&'static str; 5] {
             include_str!("../locales/pt-BR/cli-help.ftl"),
             include_str!("../locales/pt-BR/diagnostics.ftl"),
         ],
+        Language::ChineseSimplified => [
+            include_str!("../locales/zh-CN/common.ftl"),
+            include_str!("../locales/zh-CN/web.ftl"),
+            include_str!("../locales/zh-CN/cli.ftl"),
+            include_str!("../locales/zh-CN/cli-help.ftl"),
+            include_str!("../locales/zh-CN/diagnostics.ftl"),
+        ],
     }
 }
 
@@ -698,7 +719,27 @@ mod tests {
         for value in ["en", "en_US.UTF-8", "C", "C.UTF-8", "POSIX"] {
             assert_eq!(value.parse(), Ok(Language::English));
         }
-        assert!("fr".parse::<Language>().is_err());
+        for value in [
+            "zh-CN",
+            "zh_CN.UTF-8",
+            "zh",
+            "ZH-hans",
+            "zh-Hans-CN",
+            "zh-SG",
+        ] {
+            assert_eq!(value.parse(), Ok(Language::ChineseSimplified));
+        }
+        for value in ["fr", "zh-TW", "zh-Hant"] {
+            assert!(value.parse::<Language>().is_err());
+        }
+        assert_eq!(
+            serde_json::from_str::<Language>(r#""zh-Hans""#).unwrap(),
+            Language::ChineseSimplified
+        );
+        assert_eq!(
+            serde_json::to_string(&Language::ChineseSimplified).unwrap(),
+            r#""zh-CN""#
+        );
     }
 
     #[test]
@@ -709,6 +750,9 @@ mod tests {
             ("pt;q=0.5,en;q=0.5", Language::PortugueseBrazil),
             ("pt-BR;q=0,en;q=0.1", Language::English),
             ("fr,pt-BR;q=0.8", Language::PortugueseBrazil),
+            ("zh-Hans-CN, pt-BR;q=0.8", Language::ChineseSimplified),
+            ("zh-CN;q=0, en;q=0.1", Language::English),
+            ("zh-TW, en;q=0.8", Language::English),
             ("fr, *;q=0.1", Language::English),
             ("pt-BR;q=NaN", Language::English),
             ("pt-BR;q=2", Language::English),
@@ -727,8 +771,13 @@ mod tests {
     fn independent_localizers_do_not_change_one_another() {
         let en = Localizer::default();
         let pt = Localizer::new(Language::PortugueseBrazil);
+        let zh = Localizer::new(Language::ChineseSimplified);
         assert_eq!(en.text("web-search"), "Search");
         assert_eq!(pt.text("web-search"), "Pesquisar");
+        assert_eq!(zh.text("web-search"), "搜索");
+        assert_eq!(zh.age(60), "1 分钟前");
+        assert_eq!(zh.age(120), "2 分钟前");
+        assert_eq!(zh.diagnostic("reading /tmp/a b"), "正在读取 /tmp/a b");
         assert_eq!(en.text("web-search"), "Search");
         fn send_sync<T: Send + Sync>() {}
         send_sync::<Localizer>();

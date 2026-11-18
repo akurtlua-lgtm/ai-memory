@@ -11,6 +11,19 @@ version in [`docs/changelog/`](docs/changelog/):
 
 ## [Unreleased]
 
+### Added
+
+- Added Simplified Chinese (`zh-CN`) for CLI output, help, diagnostics, and
+  the built-in web interface, including the setup wizard and management console.
+- Added on-demand native Release builds on GitHub Actions, with packages
+  and checksums available as workflow artifacts.
+
+### Changed
+
+- Pointed native installers, upgrades, and marketplace catalogs at the
+  fork's GitHub repository. Added a Chinese quick start and source install
+  instructions to the README.
+
 ### Fixed
 
 - Corrected `docs/users.md` and `docs/security.md`, which still said every

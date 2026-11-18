@@ -113,7 +113,7 @@ function Get-NativeHostBin {
     } else {
         $Expected = "%LOCALAPPDATA%\Programs\ai-memory\ai-memory.exe"
     }
-    Write-Error "ai-memory: the native host client was not found (expected at $Expected). Managed launch commands (run, show, continue, resume, workstreams, rename-workstream) execute host harnesses through the native Windows client, not the Linux helper container. Install it with: irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex (docs/windows.md), or point AI_MEMORY_NATIVE_BIN at an existing ai-memory.exe."
+    Write-Error "ai-memory: the native host client was not found (expected at $Expected). Managed launch commands (run, show, continue, resume, workstreams, rename-workstream) execute host harnesses through the native Windows client, not the Linux helper container. Install it with: irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex (docs/windows.md), or point AI_MEMORY_NATIVE_BIN at an existing ai-memory.exe."
     exit 127
 }
 

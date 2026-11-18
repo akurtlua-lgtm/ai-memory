@@ -1395,7 +1395,7 @@ fn docker_wrappers_intercept_the_same_native_host_commands() {
     );
 
     let installer =
-        "https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1";
+        "https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1";
     assert!(
         powershell.contains(installer),
         "the PowerShell wrapper's missing-client refusal must name the documented installer"

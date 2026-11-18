@@ -57,11 +57,15 @@ Silicon Macs and ARM64 Linux hosts should not need `--platform linux/amd64`.
 
 ## One-step native install (`install.sh` + `ai-memory setup`)
 
+The commands below download packages from a tagged fork release.
+Use [the source installation](../README.md#quick-start) before the first
+tagged release is available.
+
 On Linux (x86_64, aarch64) and macOS (Apple Silicon, Intel), two commands go
 from nothing to a running server with your agents wired. Neither needs root.
 
 ```bash
-curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
 ai-memory setup
 ```
 
@@ -83,8 +87,8 @@ function called on its last line, so a download cut short runs nothing. To read
 it before running it:
 
 ```bash
-curl -fsSLO https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh
-curl -fsSLO https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh.sha256
+curl -fsSLO https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh
+curl -fsSLO https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh.sha256
 sha256sum -c install.sh.sha256   # macOS: shasum -a 256 -c install.sh.sha256
 sh install.sh
 ```
@@ -117,7 +121,7 @@ Native Windows has its own script, `install.ps1`, published next to
 administrator rights needed):
 
 ```powershell
-irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
 ai-memory setup
 ```
 
@@ -316,11 +320,11 @@ installs released plugin content. Generated files live under `plugins/`
 ### Claude Code
 
 ```sh
-claude plugin marketplace add akitaonrails/ai-memory
+claude plugin marketplace add akurtlua-lgtm/ai-memory
 claude plugin install ai-memory@ai-memory
 ```
 
-(or `/plugin marketplace add akitaonrails/ai-memory` and `/plugin install
+(or `/plugin marketplace add akurtlua-lgtm/ai-memory` and `/plugin install
 ai-memory@ai-memory` inside Claude Code). The plugin works in the CLI and in
 the desktop app's Code tab. Options, all optional, are set with `/plugin
 configure ai-memory@ai-memory`:
@@ -395,7 +399,7 @@ configure ai-memory@ai-memory`:
 ### Codex
 
 ```sh
-codex plugin marketplace add akitaonrails/ai-memory
+codex plugin marketplace add akurtlua-lgtm/ai-memory
 codex plugin add ai-memory@ai-memory
 ```
 
@@ -480,7 +484,7 @@ browsers then correctly withhold the session cookie.
 > Scenario B, C or D depending on whether you use Docker Desktop, a prebuilt
 > binary or a source build. Elsewhere, see
 > [Running ai-memory without docker](#running-ai-memory-without-docker);
-> `mise use -g github:akitaonrails/ai-memory` covers most setups. Check with
+> `mise use -g github:akurtlua-lgtm/ai-memory` covers most setups. Check with
 > `ai-memory --version` before continuing. If it prints "command not found",
 > the install has not put the binary on this shell's `PATH` yet (on Windows,
 > open a new terminal so the installer's PATH change applies).
@@ -683,7 +687,7 @@ the binary under a versioned Cellar path, so a service started by
 ## Fedora (RPM)
 
 Download the `x86_64` or `aarch64` RPM from the
-[latest GitHub release](https://github.com/akitaonrails/ai-memory/releases/latest)
+[latest GitHub release](https://github.com/akurtlua-lgtm/ai-memory/releases/latest)
 and install it with `sudo dnf install ./ai-memory-*.rpm`. The package includes
 the binary, hook sources, system and user systemd units, and system service
 configuration. On a single-user machine, run `ai-memory setup`, as in the
@@ -1392,7 +1396,7 @@ with a second dashboard.
 Needs a Rust toolchain and Xcode / Swift 6 (the same as a source build):
 
 ```bash
-git clone https://github.com/akitaonrails/ai-memory
+git clone https://github.com/akurtlua-lgtm/ai-memory
 cd ai-memory
 ./companions/ai-memory-macos/build.sh
 open "companions/ai-memory-macos/dist/AI Memory.app"
@@ -2893,7 +2897,7 @@ run the server), download and verify the release installer. The installer then
 downloads and verifies the release's hook archive before writing any scripts:
 
 ```bash
-installer_base=https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-install-hooks
+installer_base=https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-install-hooks
 installer_tmp="$(mktemp -d)"
 trap 'rm -rf "$installer_tmp"' EXIT
 curl -fsSL "$installer_base" -o "$installer_tmp/ai-memory-install-hooks"
@@ -2964,7 +2968,7 @@ other host, `mise` installs a tagged release binary directly from GitHub,
 with no Rust toolchain needed:
 
 ```bash
-mise use -g github:akitaonrails/ai-memory
+mise use -g github:akurtlua-lgtm/ai-memory
 ```
 
 This uses [mise's GitHub backend](https://mise.jdx.dev/dev-tools/backends/github.html),
@@ -2980,7 +2984,7 @@ release assets follow this naming convention. By default mise also holds back
 the very newest release for a short safety window
 ([`minimum_release_age`](https://mise.jdx.dev/dev-tools/github-backend.html)),
 so a fresh tag may resolve to the previous version for a day or so; pin an
-exact tag with `mise use -g github:akitaonrails/ai-memory@1.30.0` to bypass
+exact tag with `mise use -g github:akurtlua-lgtm/ai-memory@1.30.0` to bypass
 that.
 
 `cargo install ai-memory` is not available: the crate name is already taken
@@ -2994,7 +2998,7 @@ native `ai-memory-macos-aarch64.tar.gz` and `ai-memory-macos-x86_64.tar.gz`
 archives when you only need the client CLI.
 
 ```bash
-git clone https://github.com/akitaonrails/ai-memory ~/.ai-memory
+git clone https://github.com/akurtlua-lgtm/ai-memory ~/.ai-memory
 cd ~/.ai-memory
 cargo build --release --workspace
 ./target/release/ai-memory init                       # one-time

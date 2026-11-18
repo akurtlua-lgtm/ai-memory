@@ -6,7 +6,7 @@
 # `data_dir` is intentionally absent here: it's set by `--data-dir`
 # or `AI_MEMORY_DATA_DIR`, and the config file lives inside it.
 
-# Human-facing terminal language: "en" or "pt-BR". --language overrides this.
+# Human-facing terminal language: "en", "pt-BR", or "zh-CN". --language overrides this.
 # JSON, MCP, stored content and technical diagnostics keep their original format.
 language = "en"
 
@@ -56,7 +56,7 @@ log_level = "info"
 # base_path = ""
 
 # Releases URL that `ai-memory upgrade` downloads the archive and its `.sha256`
-# from. Unset uses https://github.com/akitaonrails/ai-memory/releases. Set it
+# from. Unset uses https://github.com/akurtlua-lgtm/ai-memory/releases. Set it
 # for a mirror or a hermetic test. Env equivalent:
 # `AI_MEMORY_RELEASE_BASE_URL`.
 #   release_base_url = "https://mirror.example/ai-memory/releases"

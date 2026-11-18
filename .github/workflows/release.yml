@@ -14,11 +14,15 @@ name: release
 #   SCOOP_BUCKET_TOKEN  — token that can push to akitaonrails/scoop-bucket
 #                         (fine-grained: Contents read/write on that repo)
 #
+# A manually dispatched run builds native archives and RPMs as Actions
+# artifacts. A version tag is required for the publishing jobs.
+#
 # The CI workflow already validates the binary and package assets
 # (fmt / clippy / test / native-packaging). This workflow assumes CI
 # passed on the same commit and only performs release publication.
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*.*.*'
@@ -54,6 +58,10 @@ jobs:
           if [ -z "$manifest_version" ]; then
             echo "could not read [workspace.package].version from Cargo.toml" >&2
             exit 1
+          fi
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            echo "version=${manifest_version}" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           if [ "$tag_version" != "$manifest_version" ]; then
             echo "tag version v${tag_version} does not match Cargo.toml version ${manifest_version}" >&2
@@ -111,7 +119,12 @@ jobs:
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Build release binary
-        run: cargo build --locked --release -p ai-memory-cli
+        run: cargo build --locked --release -p ai-memory-cli --features management-ui
+
+      - name: Smoke test Simplified Chinese CLI
+        run: |
+          target/release/ai-memory --language zh-CN --help > help.txt
+          grep -F '用法：' help.txt
 
       - name: Create release tarball
         env:
@@ -168,7 +181,7 @@ jobs:
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Build release binary
-        run: cargo build --locked --release -p ai-memory-cli
+        run: cargo build --locked --release -p ai-memory-cli --features management-ui
 
       # Mirrors the Linux tarball, swapping the Linux-only service assets
       # (packaging/systemd|sysusers|tmpfiles|env) for the macOS-only
@@ -242,7 +255,7 @@ jobs:
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Build release binary
-        run: cargo build --locked --release -p ai-memory-cli
+        run: cargo build --locked --release -p ai-memory-cli --features management-ui
 
       # Mirrors the Linux tarball, minus the Linux-only service assets
       # (packaging/systemd|sysusers|tmpfiles|env). Ships the `.exe`, the full
@@ -319,6 +332,7 @@ jobs:
   # publishing activates only when AUR_SSH_PRIVATE_KEY is configured.
   check-secrets:
     name: check publish credentials
+    if: github.event_name == 'push' && github.repository == 'akitaonrails/ai-memory'
     runs-on: ubuntu-latest
     outputs:
       docker_enabled: ${{ steps.check.outputs.docker_enabled }}
@@ -529,6 +543,7 @@ jobs:
 
   github-release:
     name: github release
+    if: github.event_name == 'push'
     needs: [binary, macos, windows, rpm, validate-version]
     runs-on: ubuntu-latest
     permissions:
@@ -598,32 +613,21 @@ jobs:
           echo "## Install" >> body.md
           echo '```bash' >> body.md
           echo "# Linux/macOS, no root: checksum-verified release binary under ~/.local, then one-step setup" >> body.md
-          echo "curl -fsSL https://github.com/akitaonrails/ai-memory/releases/download/${GITHUB_REF_NAME}/install.sh | AI_MEMORY_VERSION=${{ needs.validate-version.outputs.version }} sh" >> body.md
+          release_base="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases"
+          echo "curl -fsSL ${release_base}/download/${GITHUB_REF_NAME}/install.sh | AI_MEMORY_RELEASE_BASE_URL=${release_base} AI_MEMORY_VERSION=${{ needs.validate-version.outputs.version }} sh" >> body.md
           echo "ai-memory setup" >> body.md
           echo "" >> body.md
-          echo "# Arch Linux (AUR)" >> body.md
-          echo "yay -S ai-memory-bin      # prebuilt Linux x86_64/aarch64 binary" >> body.md
-          echo "yay -S ai-memory          # builds from source" >> body.md
-          echo "" >> body.md
           echo "# Fedora: download the matching RPM below, then run sudo dnf install ./ai-memory-<version>-1.<arch>.rpm" >> body.md
-          echo "" >> body.md
-          echo "# Docker" >> body.md
-          echo "docker pull akitaonrails/ai-memory:${{ needs.validate-version.outputs.version }}" >> body.md
           echo "" >> body.md
           echo "# macOS aarch64/x86_64 (no toolchain): download the matching ai-memory-macos-<arch>.tar.gz below," >> body.md
           echo "# extract it, and follow the bundled docs/macos.md." >> body.md
           echo "" >> body.md
           echo "# Windows x86_64, no admin (PowerShell): checksum-verified release under %LOCALAPPDATA%\\Programs, then one-step setup" >> body.md
-          echo "\$env:AI_MEMORY_VERSION='${{ needs.validate-version.outputs.version }}'; irm https://github.com/akitaonrails/ai-memory/releases/download/${GITHUB_REF_NAME}/install.ps1 | iex" >> body.md
-          echo "ai-memory setup" >> body.md
-          echo "" >> body.md
-          echo "# Windows (Scoop)" >> body.md
-          echo "scoop bucket add akitaonrails https://github.com/akitaonrails/scoop-bucket" >> body.md
-          echo "scoop install ai-memory" >> body.md
+          echo "\$env:AI_MEMORY_RELEASE_BASE_URL='${release_base}'; \$env:AI_MEMORY_VERSION='${{ needs.validate-version.outputs.version }}'; irm ${release_base}/download/${GITHUB_REF_NAME}/install.ps1 | iex" >> body.md
           echo "ai-memory setup" >> body.md
           echo "" >> body.md
           echo "# From source" >> body.md
-          echo "cargo install --locked --git https://github.com/akitaonrails/ai-memory --tag ${GITHUB_REF_NAME}" >> body.md
+          echo "cargo install --locked --git $GITHUB_SERVER_URL/$GITHUB_REPOSITORY --tag ${GITHUB_REF_NAME} --features management-ui ai-memory-cli" >> body.md
           echo '```' >> body.md
 
       - name: Create GitHub Release
@@ -632,6 +636,7 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" artifacts/* \
             --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
             --title "$GITHUB_REF_NAME" \
             --notes-file body.md \
             --latest

@@ -56,7 +56,7 @@ tarball for your chip, and `ai-memory setup` initialises the data dir, installs
 and starts the LaunchAgent below for you, and wires your agents:
 
 ```bash
-curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
 ai-memory setup
 ```
 
@@ -70,7 +70,7 @@ or Docker. Each tagged release publishes a macOS tarball per architecture.
 # 1. Download the archive for your chip and extract it to a stable location.
 #    aarch64 = Apple Silicon (M-series); x86_64 = Intel.
 mkdir -p ~/Applications/ai-memory && cd ~/Applications/ai-memory
-curl -fsSL -O https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-macos-aarch64.tar.gz
+curl -fsSL -O https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-macos-aarch64.tar.gz
 tar -xzf ai-memory-macos-aarch64.tar.gz
 # `curl` downloads are not Gatekeeper-quarantined, so the binary runs as-is.
 # If you downloaded via a browser instead, clear the quarantine flag once:
@@ -152,7 +152,7 @@ Use this when developing ai-memory itself. Requires Rust 1.95
 extra system libraries are needed.
 
 ```bash
-git clone https://github.com/akitaonrails/ai-memory
+git clone https://github.com/akurtlua-lgtm/ai-memory
 cd ai-memory
 cargo build --release --workspace
 ./target/release/ai-memory init

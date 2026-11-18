@@ -1,7 +1,7 @@
 # ai-memory for Claude Code
 
 Long-term memory across sessions and coding agents, backed by your own
-[ai-memory](https://github.com/akitaonrails/ai-memory) server. Quit Claude
+[ai-memory](https://github.com/akurtlua-lgtm/ai-memory) server. Quit Claude
 Code mid-task, open another agent in the same directory, and continue without
 re-explaining the context.
 
@@ -13,7 +13,7 @@ This plugin is generated from the ai-memory repository
 The plugin does not contain ai-memory. Install the binary once, separately,
 and run `ai-memory setup` (install script, Homebrew, AUR, RPM, the Docker
 wrapper or the macOS app; see the
-[install guide](https://github.com/akitaonrails/ai-memory#install)). Without
+[install guide](https://github.com/akurtlua-lgtm/ai-memory#install)). Without
 the binary the plugin captures nothing: it says so once at session start and
 never blocks Claude.
 
@@ -24,14 +24,14 @@ memory tools do not connect while `server_url` is empty.
 ## Install
 
 ```text
-/plugin marketplace add akitaonrails/ai-memory
+/plugin marketplace add akurtlua-lgtm/ai-memory
 /plugin install ai-memory@ai-memory
 ```
 
 or from a shell:
 
 ```sh
-claude plugin marketplace add akitaonrails/ai-memory
+claude plugin marketplace add akurtlua-lgtm/ai-memory
 claude plugin install ai-memory@ai-memory
 ```
 

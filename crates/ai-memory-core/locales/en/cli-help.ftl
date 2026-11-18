@@ -1,7 +1,7 @@
 ## Clap help. IDs follow command/argument paths, never translated command names.
 
 cli-help-root-about = { "`ai-memory` binary entry point." }
-cli-help-root-language-help = { "Language for human output (en or pt-BR)" }
+cli-help-root-language-help = { "Language for human output (en, pt-BR, or zh-CN)" }
 cli-help-root-data-dir-help = { "Override the data directory" }
 cli-help-root-data-dir-long-help = { "Override the data directory.\u000A\u000ADefaults to a platform path under `dirs::data_local_dir()`. The config loader also honours `AI_MEMORY_DATA_DIR`." }
 cli-help-root-config-help = { "Path to an explicit config file (defaults to `<data_dir>/config.toml`)" }

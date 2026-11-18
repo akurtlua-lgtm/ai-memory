@@ -79,6 +79,30 @@ fn purge_form() -> String {
 }
 
 #[tokio::test]
+async fn management_login_honors_the_chinese_language_cookie_under_a_prefix() {
+    let router = console(Engine {
+        purges: Arc::new(AtomicUsize::new(0)),
+    });
+    let response = router
+        .oneshot(
+            Request::builder()
+                .uri("/memory/manage/login")
+                .header(header::ACCEPT_LANGUAGE, "en")
+                .header(header::COOKIE, "ai_memory_language=zh-CN")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(response.headers()[header::CONTENT_LANGUAGE], "zh-CN");
+    let body = body_text(response).await;
+    assert!(body.contains("value=\"zh-CN\" lang=\"zh-CN\" selected>简体中文"));
+    assert!(body.contains("管理控制台"));
+    assert!(body.contains("用户名"));
+}
+
+#[tokio::test]
 async fn management_assets_work_under_a_prefix_and_deny_framing() {
     let router = axum::Router::new().nest(
         "/memory",

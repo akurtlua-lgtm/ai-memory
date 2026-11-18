@@ -68,7 +68,7 @@ HOOKS_STAGE_DIR="${HOME}/.local/share/ai-memory/hooks"
 # flush would break every hook until the next managed launch. Keep it with the
 # host's ai-memory data instead of under CACHE_DIR.
 NATIVE_RUNNER_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/ai-memory/native-runner"
-WRAPPER_URL="${AI_MEMORY_WRAPPER_URL:-https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-wrapper}"
+WRAPPER_URL="${AI_MEMORY_WRAPPER_URL:-https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-wrapper}"
 WRAPPER_SHA256_URL="${AI_MEMORY_WRAPPER_SHA256_URL:-${WRAPPER_URL}.sha256}"
 
 # ---- version-check helpers (best-effort; never block the wrapper) --------
@@ -515,7 +515,7 @@ native_host_binary() {
       # two supported paths instead of a bare refusal (#1545).
       echo "ai-memory: the POSIX container wrapper cannot run host commands on native Windows" >&2
       echo "use the PowerShell wrapper (bin/ai-memory.ps1) or install the native Windows client:" >&2
-      echo "  irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex" >&2
+      echo "  irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex" >&2
       return 1
       ;;
     *)
@@ -533,7 +533,7 @@ native_host_binary() {
       ;;
   esac
   artifact="ai-memory-${os}-${arch}"
-  base="https://github.com/akitaonrails/ai-memory/releases/latest/download/${artifact}.tar.gz"
+  base="https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/${artifact}.tar.gz"
   native_dir="${NATIVE_RUNNER_DIR}"
   binary="${native_dir}/ai-memory"
   archive="${native_dir}/${artifact}.tar.gz"

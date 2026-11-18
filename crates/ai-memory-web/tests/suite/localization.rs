@@ -33,14 +33,17 @@ async fn concurrent_languages_are_isolated_and_cookie_overrides_negotiation() {
             .body(Body::empty())
             .unwrap()
     };
-    let (pt, en) = tokio::join!(
+    let (pt, en, zh) = tokio::join!(
         router.clone().oneshot(request("pt-BR, en;q=0.5")),
-        router.clone().oneshot(request("en, pt-BR;q=0.1"))
+        router.clone().oneshot(request("en, pt-BR;q=0.1")),
+        router.clone().oneshot(request("zh-Hans-CN, en;q=0.5"))
     );
     let pt = pt.unwrap();
     let en = en.unwrap();
+    let zh = zh.unwrap();
     assert_eq!(pt.headers()[header::CONTENT_LANGUAGE], "pt-BR");
     assert_eq!(en.headers()[header::CONTENT_LANGUAGE], "en");
+    assert_eq!(zh.headers()[header::CONTENT_LANGUAGE], "zh-CN");
     assert!(
         pt.headers()
             .get_all(header::VARY)
@@ -49,24 +52,28 @@ async fn concurrent_languages_are_isolated_and_cookie_overrides_negotiation() {
     );
     let pt = body(pt).await;
     let en = body(en).await;
+    let zh = body(zh).await;
     assert!(pt.contains("<html lang=\"pt-BR\""));
     assert!(pt.contains("Painel de memória"));
     assert!(!pt.contains("Memory dashboard"));
     assert!(en.contains("Memory dashboard"));
     assert!(pt.contains("Português (Brasil)"));
+    assert!(zh.contains("<html lang=\"zh-CN\""));
+    assert!(zh.contains("记忆概览"));
+    assert!(zh.contains("value=\"zh-CN\" lang=\"zh-CN\" selected>简体中文"));
     let response = router
         .clone()
         .oneshot(
             Request::builder()
                 .uri("/")
-                .header(header::ACCEPT_LANGUAGE, "pt-BR")
-                .header(header::COOKIE, "ai_memory_language=en")
+                .header(header::ACCEPT_LANGUAGE, "en")
+                .header(header::COOKIE, "ai_memory_language=zh-CN")
                 .body(Body::empty())
                 .unwrap(),
         )
         .await
         .unwrap();
-    assert_eq!(response.headers()[header::CONTENT_LANGUAGE], "en");
+    assert_eq!(response.headers()[header::CONTENT_LANGUAGE], "zh-CN");
     let response = router.oneshot(request("fr-CA")).await.unwrap();
     assert_eq!(response.headers()[header::CONTENT_LANGUAGE], "en");
 }
@@ -154,9 +161,12 @@ async fn api_response_is_identical_under_different_language_headers() {
             .unwrap()
     };
     let en = router.clone().oneshot(request("en")).await.unwrap();
-    let pt = router.oneshot(request("pt-BR")).await.unwrap();
-    assert!(pt.headers().get(header::CONTENT_LANGUAGE).is_none());
-    assert_eq!(body(en).await, body(pt).await);
+    let english = body(en).await;
+    for language in ["pt-BR", "zh-CN"] {
+        let response = router.clone().oneshot(request(language)).await.unwrap();
+        assert!(response.headers().get(header::CONTENT_LANGUAGE).is_none());
+        assert_eq!(english, body(response).await);
+    }
 }
 
 /// Attributes whose value comes from the translation catalog. A script that

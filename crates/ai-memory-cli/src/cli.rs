@@ -129,7 +129,7 @@ fn run_value_flags() -> Vec<String> {
 #[derive(Debug, Parser)]
 #[command(name = "ai-memory", version, about, long_about = None)]
 pub struct Cli {
-    /// Language for human output (en or pt-BR).
+    /// Language for human output (en, pt-BR, or zh-CN).
     #[arg(long, global = true)]
     pub language: Option<ai_memory_core::i18n::Language>,
     /// Override the data directory.

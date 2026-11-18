@@ -236,8 +236,8 @@ main() {
   test -n "${posix_list}" || fail "could not extract the native host command list from bin/ai-memory"
   test "${posix_list}" = "${ps1_list}" \
     || fail "native host command lists drifted between bin/ai-memory (${posix_list}) and bin/ai-memory.ps1 (${ps1_list})"
-  assert_contains bin/ai-memory.ps1 "https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1"
-  assert_contains bin/ai-memory "https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1"
+  assert_contains bin/ai-memory.ps1 "https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1"
+  assert_contains bin/ai-memory "https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1"
 
   log "Checking the wrapper hands host commands the volume's root bearer"
   # New-install default: a server initialized on the named volume keeps its token at

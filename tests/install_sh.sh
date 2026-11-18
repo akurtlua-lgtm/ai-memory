@@ -144,14 +144,14 @@ WGET
 ln -sf "$(command -v cp)" "${tools}/cp"
 ln -sf "$(command -v basename)" "${tools}/basename"
 fake_wget "${TMP_ROOT}/wget-gnu" "  --https-only   only follow secure HTTPS links"
-run_install wget-gnu "https://github.com/akitaonrails/ai-memory/releases" \
+run_install wget-gnu "https://github.com/akurtlua-lgtm/ai-memory/releases" \
   PATH="${TMP_ROOT}/wget-gnu:${tools}" \
   || fail "GNU wget install failed: $(cat "${TMP_ROOT}/wget-gnu/out.log")"
 grep -Fq -- "-q --https-only -O" "${TMP_ROOT}/wget-gnu/wget.log" \
   || fail "default-base wget download did not pin https: $(cat "${TMP_ROOT}/wget-gnu/wget.log")"
 
 fake_wget "${TMP_ROOT}/wget-busybox" "BusyBox wget"
-if run_install wget-busybox "https://github.com/akitaonrails/ai-memory/releases" \
+if run_install wget-busybox "https://github.com/akurtlua-lgtm/ai-memory/releases" \
   PATH="${TMP_ROOT}/wget-busybox:${tools}"; then
   fail "a wget without --https-only was trusted for the default base"
 fi

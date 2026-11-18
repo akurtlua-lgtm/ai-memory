@@ -292,7 +292,7 @@ mod tests {
                         assert_eq!(
                             i18n.text(&id),
                             value.to_string(),
-                            "{id}: update both help catalogs when changing CLI metadata"
+                            "{id}: update the help catalogs when changing CLI metadata"
                         );
                     }
                 }
@@ -324,6 +324,24 @@ mod tests {
             }
         }
         visit(&mut command);
+    }
+
+    #[test]
+    fn chinese_help_preserves_commands_and_flags() {
+        let i18n = Localizer::new(Language::ChineseSimplified);
+        let help = command(crate::cli::Cli::command(), "root", &i18n)
+            .render_long_help()
+            .to_string();
+        for expected in [
+            "用法：",
+            "命令:",
+            "显示帮助",
+            "--language",
+            "zh-CN",
+            "status",
+        ] {
+            assert!(help.contains(expected), "missing {expected:?} in {help}");
+        }
     }
 
     #[test]
@@ -363,7 +381,7 @@ mod tests {
             anyhow::anyhow!("unknown variant `x\u{1b}]52;c;cHduZWQ=\u{7}`")
                 .context("decoding caf\u{e9} \u{202e}reply")
         };
-        for language in [Language::English, Language::PortugueseBrazil] {
+        for &language in Language::ALL {
             let report = failure_report(&localize_failure(failure(), language));
             assert!(
                 !report.contains(['\u{1b}', '\u{7}', '\u{202e}']),
@@ -395,7 +413,7 @@ mod tests {
             format!("{error:#}").contains('\u{1b}'),
             "control: serde quotes the decoded value"
         );
-        for language in [Language::English, Language::PortugueseBrazil] {
+        for &language in Language::ALL {
             let line = diagnostic(
                 &Localizer::new(language),
                 format!("decoding reply ({error:#})"),
@@ -426,10 +444,10 @@ mod tests {
 
     /// #2010: a catalog line around `ai-memory run` quotes a workspace,
     /// project or workstream name the server returned; each value prints
-    /// inert in both languages.
+    /// inert in every language.
     #[test]
     fn run_catalog_lines_neutralize_their_values() {
-        for language in [Language::English, Language::PortugueseBrazil] {
+        for &language in Language::ALL {
             let line = format(
                 &Localizer::new(language),
                 "cli-workstreams-managed-workstreams-for-workspace-project",

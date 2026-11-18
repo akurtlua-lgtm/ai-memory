@@ -176,7 +176,7 @@ pub(crate) fn confirm_repair(
     }
     Ok(matches!(
         line.trim().to_ascii_lowercase().as_str(),
-        "" | "y" | "yes" | "s" | "sim"
+        "" | "y" | "yes" | "s" | "sim" | "是"
     ))
 }
 

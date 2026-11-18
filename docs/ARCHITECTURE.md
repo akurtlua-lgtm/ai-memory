@@ -1293,7 +1293,7 @@ run_autowire = true                # `ai-memory run <harness>` auto-installs tha
                                    # Also `--no-autowire`.
 release_base_url = ""              # override the GitHub releases base URL that `ai-memory
                                    # upgrade` checks and downloads from (#801). Empty =
-                                   # https://github.com/akitaonrails/ai-memory/releases.
+                                   # https://github.com/akurtlua-lgtm/ai-memory/releases.
                                    # For hermetic tests / mirrors, not day-to-day installs.
                                    # Env: AI_MEMORY_RELEASE_BASE_URL.
 

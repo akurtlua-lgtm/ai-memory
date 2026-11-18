@@ -1,7 +1,7 @@
 #!/bin/sh
 # Install the ai-memory release binary for the current user.
 #
-#   curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+#   curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
 #
 # Downloads ai-memory-<os>-<arch>.tar.gz from a GitHub release, verifies it
 # against the release's published .sha256 file, unpacks it under
@@ -31,7 +31,7 @@
 
 set -eu
 
-DEFAULT_RELEASE_BASE="https://github.com/akitaonrails/ai-memory/releases"
+DEFAULT_RELEASE_BASE="https://github.com/akurtlua-lgtm/ai-memory/releases"
 
 say() {
     printf 'ai-memory install: %s\n' "$*"
@@ -58,7 +58,7 @@ detect_target() {
         Linux) os=linux ;;
         Darwin) os=macos ;;
         MINGW* | MSYS* | CYGWIN* | Windows_NT)
-            die "Windows is not supported by this script; in PowerShell run: irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex"
+            die "Windows is not supported by this script; in PowerShell run: irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex"
             ;;
         *) die "unsupported operating system: $os" ;;
     esac

@@ -2879,13 +2879,12 @@ fn jail_decision(
     Ok(JailPlan { warn, mode })
 }
 
-/// A confirmation line's yes/no verdict: `Enter`/empty, `y`, or `yes`
-/// (case-insensitive) proceed; only an explicit `n`/`no` declines. Anything
-/// else also proceeds — this is a `[Y/n]` prompt, not a strict allowlist.
+/// A default-yes prompt declines on an explicit negative answer in any
+/// supported interface language.
 fn yolo_decision(confirmed_line: &str) -> bool {
     !matches!(
         confirmed_line.trim().to_lowercase().as_str(),
-        "n" | "no" | "não" | "nao"
+        "n" | "no" | "não" | "nao" | "否" | "不" | "不要" | "取消"
     )
 }
 
@@ -4975,7 +4974,7 @@ fn ensure_executable_available(
 /// user needs the native client's installer instead.
 fn docker_host_client_hint() -> &'static str {
     if cfg!(windows) {
-        "Docker Desktop users: managed launches run through the native Windows client, not the container; install it with `irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex` (docs/windows.md)"
+        "Docker Desktop users: managed launches run through the native Windows client, not the container; install it with `irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex` (docs/windows.md)"
     } else {
         "Docker users should run `ai-memory upgrade` to refresh the host wrapper"
     }
@@ -7486,6 +7485,8 @@ mod tests {
         assert!(!yolo_decision("não"));
         assert!(!yolo_decision("NÃO\n"));
         assert!(!yolo_decision("nao"));
+        assert!(!yolo_decision("否\n"));
+        assert!(!yolo_decision("取消"));
     }
 
     #[test]

@@ -10,12 +10,27 @@
 > re-explaining the architecture, the failed approaches, or the open
 > questions.
 
-**Website: [aimemory.sh](https://aimemory.sh)**
+**Upstream website** [aimemory.sh](https://aimemory.sh)
 
 [![Website](https://img.shields.io/badge/website-aimemory.sh-blue)](https://aimemory.sh)
-[![Release](https://img.shields.io/github/v/release/akitaonrails/ai-memory)](https://github.com/akitaonrails/ai-memory/releases/latest)
+[![Release](https://img.shields.io/github/v/release/akurtlua-lgtm/ai-memory)](https://github.com/akurtlua-lgtm/ai-memory/releases)
+[![Release build](https://github.com/akurtlua-lgtm/ai-memory/actions/workflows/release.yml/badge.svg)](https://github.com/akurtlua-lgtm/ai-memory/actions/workflows/release.yml)
 [![Rust](https://img.shields.io/badge/rust-1.95+-blue)](rust-toolchain.toml)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+## 简体中文
+
+这是 [akitaonrails/ai-memory](https://github.com/akitaonrails/ai-memory) 的中文 fork。ai-memory 为 Codex、Claude Code 等编程智能体保留项目记忆和跨会话交接记录，支持用中文录入和检索记忆。此 fork 提供简体中文 CLI、网页、管理控制台和安装向导。MCP、FTS5、Hook、Workstream、Token 等术语沿用英文。
+
+有 Rust 1.95 的环境可以直接从本仓库安装。安装后先用 `--plan` 查看将接入的智能体和服务，再运行安装向导。
+
+```bash
+cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
+ai-memory --language zh-CN setup --plan
+ai-memory --language zh-CN setup
+```
+
+要在终端默认使用中文，在 `config.toml` 顶层添加 `language = "zh-CN"`。网页语言可以在菜单里单独设置。预编译包和源码构建说明见 [Quick start](#quick-start) 和 [Release builds](#release-builds)。
 
 ## Why ai-memory
 
@@ -216,10 +231,20 @@ differs, and the published benchmark, is in [How ai-memory compares](docs/compar
 
 ## Quick start
 
+The first tagged release will make the installers below available. The [fork's
+Releases page](https://github.com/akurtlua-lgtm/ai-memory/releases) lists published
+versions. You can install from source with Rust 1.95 today and rerun the same
+`cargo install` command to update a source installation.
+
+```bash
+cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
+ai-memory setup
+```
+
 ### Linux and macOS (two commands, no root)
 
 ```bash
-curl -fsSL https://github.com/akitaonrails/ai-memory/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
 ai-memory setup
 ```
 
@@ -240,12 +265,12 @@ variables and how to verify the script before running it are in
 An AI agent installing ai-memory for you can follow
 [`INSTALL_FOR_AGENTS.md`](INSTALL_FOR_AGENTS.md).
 
-Claude Code and Codex users can wire their agent as a marketplace plugin
-instead (the binary is still installed as above):
+After a tagged release is available, Claude Code and Codex users can install
+the fork's marketplace plugin as well as the native binary.
 
 ```bash
-claude plugin marketplace add akitaonrails/ai-memory && claude plugin install ai-memory@ai-memory
-codex plugin marketplace add akitaonrails/ai-memory && codex plugin add ai-memory@ai-memory
+claude plugin marketplace add akurtlua-lgtm/ai-memory && claude plugin install ai-memory@ai-memory
+codex plugin marketplace add akurtlua-lgtm/ai-memory && codex plugin add ai-memory@ai-memory
 ```
 
 Codex then asks you to trust the hooks in `/hooks`. See
@@ -256,7 +281,7 @@ Codex then asks you to trust the hooks in `/hooks`. See
 In PowerShell:
 
 ```powershell
-irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
 ai-memory setup
 ```
 
@@ -268,7 +293,8 @@ sign in, with no console window, and restarts if it fails. Details and the
 other Windows setups (WSL2, Docker Desktop, a real Windows service) are in
 [`docs/windows.md`](docs/windows.md).
 
-With [Scoop](https://scoop.sh) (ai-memory 3.4.0 or later):
+The upstream project also publishes through [Scoop](https://scoop.sh).
+That bucket installs the upstream build.
 
 ```powershell
 scoop bucket add akitaonrails https://github.com/akitaonrails/scoop-bucket
@@ -278,7 +304,7 @@ ai-memory setup
 
 Update it with `scoop update ai-memory`.
 
-### Arch Linux (AUR)
+### Arch Linux (upstream AUR packages)
 
 For native Arch installs, use the AUR packages. They install
 `/usr/bin/ai-memory`, packaged hook sources, and both system-level and
@@ -290,7 +316,7 @@ yay -S ai-memory        # builds from source
 ai-memory setup         # data dir, user service, agents, self-check
 ```
 
-### Homebrew (macOS and Linux)
+### Homebrew (upstream tap for macOS and Linux)
 
 The tap installs the prebuilt binary and its hook sources on macOS and on
 Linux, including atomic distributions such as Bazzite or Fedora Silverblue
@@ -307,7 +333,7 @@ Details are in [`docs/install.md`](docs/install.md#homebrew-macos-and-linux).
 ### Fedora (RPM)
 
 Download the `x86_64` or `aarch64` RPM from the
-[latest release](https://github.com/akitaonrails/ai-memory/releases/latest),
+[latest release](https://github.com/akurtlua-lgtm/ai-memory/releases/latest),
 then install it:
 
 ```bash
@@ -337,7 +363,7 @@ replacing the app is an update and does not rewrite that tree.
 Needs a Rust toolchain and Xcode / Swift 6 (same as a source build):
 
 ```bash
-git clone https://github.com/akitaonrails/ai-memory
+git clone https://github.com/akurtlua-lgtm/ai-memory
 cd ai-memory
 ./companions/ai-memory-macos/build.sh
 open "companions/ai-memory-macos/dist/AI Memory.app"
@@ -363,9 +389,14 @@ Prebuilt tarball and launchd-without-the-app paths:
 You need: Docker or Podman + an agent CLI from the [Support Matrix](#support-matrix),
 or anything else that speaks MCP.
 
-The published Docker image includes `linux/amd64` and `linux/arm64` variants,
-so Apple Silicon Macs and ARM64 Linux hosts can pull `akitaonrails/ai-memory`
-without `--platform linux/amd64` emulation.
+Build this fork's Docker image from the repository root. The example uses the
+wrapper asset from a tagged fork release.
+
+```bash
+docker build --target runtime-source --build-arg AI_MEMORY_FEATURES=management-ui \
+    -f docker/Dockerfile -t ai-memory:local .
+export AI_MEMORY_IMAGE=ai-memory:local
+```
 
 The Docker quick-start below has **no authentication**: the container never
 runs `init`, so it starts without a token. The server binds to loopback only,
@@ -380,7 +411,7 @@ default; see [Security](#security) below for that and for adding a token here.
 mkdir -p ~/.local/bin
 wrapper_tmp="$(mktemp -d)"
 trap 'rm -rf "$wrapper_tmp"' EXIT
-wrapper_base=https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-wrapper
+wrapper_base=https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-wrapper
 curl -fsSL "$wrapper_base" -o "$wrapper_tmp/ai-memory-wrapper"
 curl -fsSL "$wrapper_base.sha256" -o "$wrapper_tmp/ai-memory-wrapper.sha256"
 expected="$(awk 'NR == 1 { print $1 }' "$wrapper_tmp/ai-memory-wrapper.sha256")"
@@ -412,7 +443,7 @@ docker run -d --name ai-memory \
     -e ANTHROPIC_API_KEY=sk-ant-... \
     -e AI_MEMORY_EMBEDDING_PROVIDER=openai \
     -e OPENAI_API_KEY=sk-... \
-    docker.io/akitaonrails/ai-memory:latest
+    "$AI_MEMORY_IMAGE"
 
 # 3. Wire your agent CLI in two commands. The wrapper takes care of
 #    mounts and each client's config-path detection. Re-run with
@@ -563,7 +594,7 @@ Homebrew, but not by the pinned Nixpkgs revision.
 
 ```nix
 {
-  inputs.ai-memory.url = "github:akitaonrails/ai-memory";
+  inputs.ai-memory.url = "github:akurtlua-lgtm/ai-memory";
 
   outputs = { nixpkgs, ai-memory, ... }: {
     nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
@@ -669,10 +700,32 @@ Search modes, entities, feedback, briefings, and the web API are covered in [`do
 
 ### Interface language
 
-Use `ai-memory --language pt-BR status` or set `AI_MEMORY_LANGUAGE=pt-BR`
-for Brazilian Portuguese. The web interface follows the browser's language
-and offers an independent language selector. See [interface languages](docs/localization.md)
-for configuration, translation boundaries and contributor instructions.
+Use `ai-memory --language pt-BR status` for Brazilian Portuguese. The web
+interface follows the browser's language and offers an independent language
+selector. See [interface languages](docs/localization.md) for configuration
+and contributor instructions.
+
+要用简体中文查看命令帮助，请运行 `ai-memory --language zh-CN --help`。
+如需让终端持续使用中文，在 `config.toml` 中设置 `language = "zh-CN"`。
+网页可在语言菜单中选择「简体中文」。
+
+## Release builds
+
+From a checkout, build the optimized binary with the optional management console.
+
+```bash
+cargo build --locked --release -p ai-memory-cli --features management-ui
+./target/release/ai-memory --language zh-CN --help
+```
+
+On Windows the binary is `target\release\ai-memory.exe`.
+
+Run the [release workflow](https://github.com/akurtlua-lgtm/ai-memory/actions/workflows/release.yml)
+from **Actions → release → Run workflow** to build packages for Linux (x86_64
+and ARM64), macOS (Intel and Apple Silicon), and Windows (x86_64). The workflow
+also builds Fedora RPMs and attaches packages and SHA-256 checksums to the run.
+Pushing a matching `vX.Y.Z` tag publishes the packages and install scripts to
+[GitHub Releases](https://github.com/akurtlua-lgtm/ai-memory/releases).
 
 ## Teams and multiple machines
 

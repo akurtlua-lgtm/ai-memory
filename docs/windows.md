@@ -38,7 +38,7 @@ installed and launched inside a WSL2 distro.
 ```bash
 # Inside WSL2.
 mkdir -p ~/.local/bin
-wrapper_base=https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-wrapper
+wrapper_base=https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-wrapper
 wrapper_tmp="$(mktemp -d)"
 trap 'rm -rf "$wrapper_tmp"' EXIT
 curl -fsSL "$wrapper_base" -o "$wrapper_tmp/ai-memory-wrapper"
@@ -86,7 +86,7 @@ skips the alias.
 # Install the Windows Docker wrapper.
 $UserBin = "$HOME\bin"
 New-Item -ItemType Directory -Force $UserBin | Out-Null
-$ReleaseBase = "https://github.com/akitaonrails/ai-memory/releases/latest/download"
+$ReleaseBase = "https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download"
 $WrapperAssets = @{
     "ai-memory.ps1" = "ai-memory-wrapper.ps1"
     "ai-memory.cmd" = "ai-memory-wrapper.cmd"
@@ -176,7 +176,7 @@ from the release zip
 ([Scenario C](#scenario-c-prebuilt-release-binary-no-toolchain)):
 
 ```powershell
-irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
 ```
 
 `install.ps1` unpacks `ai-memory.exe` to `%LOCALAPPDATA%\Programs\ai-memory`
@@ -237,7 +237,7 @@ The quickest path is two commands in PowerShell, neither needing
 administrator rights:
 
 ```powershell
-irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
 ai-memory setup
 ```
 
@@ -286,7 +286,7 @@ To do the same by hand:
 $Dest = "$env:LOCALAPPDATA\Programs\ai-memory"
 New-Item -ItemType Directory -Force $Dest | Out-Null
 Invoke-WebRequest `
-    -Uri "https://github.com/akitaonrails/ai-memory/releases/latest/download/ai-memory-windows-x86_64.zip" `
+    -Uri "https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/ai-memory-windows-x86_64.zip" `
     -OutFile "$env:TEMP\ai-memory.zip"
 Expand-Archive "$env:TEMP\ai-memory.zip" -DestinationPath $Dest -Force
 Get-ChildItem "$Dest\ai-memory.exe" | Unblock-File
@@ -349,7 +349,7 @@ Use this when developing ai-memory itself on Windows or when you do not
 want the Docker wrapper for CLI commands.
 
 ```powershell
-git clone https://github.com/akitaonrails/ai-memory .\ai-memory
+git clone https://github.com/akurtlua-lgtm/ai-memory .\ai-memory
 Set-Location .\ai-memory
 cargo build --workspace
 cargo test --workspace

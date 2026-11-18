@@ -47,6 +47,7 @@
       <select id="interface-language" aria-label="{{ i18n.text("web-language") }}">
         <option value="en" lang="en" {% if i18n.tag() == "en" %}selected{% endif %}>English</option>
         <option value="pt-BR" lang="pt-BR" {% if i18n.tag() == "pt-BR" %}selected{% endif %}>Português (Brasil)</option>
+        <option value="zh-CN" lang="zh-CN" {% if i18n.tag() == "zh-CN" %}selected{% endif %}>简体中文</option>
       </select>
       <div class="theme-switch" role="group" aria-label="{{ i18n.text("web-color-theme") }}">
         <button type="button" data-theme-choice="light" aria-pressed="false" title="{{ i18n.text("web-light-theme") }}">{{ i18n.text("web-light") }}</button>

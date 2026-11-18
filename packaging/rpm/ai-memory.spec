@@ -5,7 +5,7 @@ Release:        1
 Summary:        Local-first long-term memory MCP server for AI coding agents
 License:        MIT
 URL:            https://aimemory.sh
-Source0:        https://github.com/akitaonrails/ai-memory/releases/download/v%{version}/ai-memory-linux-%{_arch}.tar.gz
+Source0:        https://github.com/akurtlua-lgtm/ai-memory/releases/download/v%{version}/ai-memory-linux-%{_arch}.tar.gz
 BuildArch:      %{_arch}
 %global debug_package %{nil}
 Requires:       systemd

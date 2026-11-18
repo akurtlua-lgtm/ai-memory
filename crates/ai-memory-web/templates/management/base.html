@@ -8,6 +8,7 @@
       <select id="interface-language" aria-label="{{ i18n.text("web-language") }}">
         <option value="en" lang="en" {% if i18n.tag() == "en" %}selected{% endif %}>English</option>
         <option value="pt-BR" lang="pt-BR" {% if i18n.tag() == "pt-BR" %}selected{% endif %}>Português (Brasil)</option>
+        <option value="zh-CN" lang="zh-CN" {% if i18n.tag() == "zh-CN" %}selected{% endif %}>简体中文</option>
       </select><div role="group" aria-label="{{ i18n.text("web-color-theme") }}" class="management-themes"><button type="button" data-theme="system">{{ i18n.text("web-system") }}</button><button type="button" data-theme="light">{{ i18n.text("web-light") }}</button><button type="button" data-theme="dark">{{ i18n.text("web-dark") }}</button></div>
 {% if !username.is_empty() %}<span>{{ username }} · {% if admin %}{{ i18n.text("web-admin") }}{% else %}{{ i18n.text("web-user") }}{% endif %}</span><form action="{{ root }}/action" method="post"><input type="hidden" name="action" value="logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button>{{ i18n.text("web-sign-out") }}</button></form>{% endif %}
 </div></div></header>

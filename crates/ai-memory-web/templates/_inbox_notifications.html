@@ -16,15 +16,25 @@
       var data=await response.json(),next=JSON.stringify(data);
       if(next!==signature){
         signature=next;badge.textContent=String(data.pending);badge.hidden=data.pending===0;panel.hidden=data.pending===0;
-        link.setAttribute("aria-label",data.pending?"Inbox, "+data.pending+(" "+{{ i18n.js("web-messages-waiting-for-agents")|safe }}+""):"Inbox");
-        summary.textContent=data.pending===1?{{ i18n.js("web-1-message-waiting-for-an-agent")|safe }}:data.pending+(" "+{{ i18n.js("web-messages-waiting-for-agents")|safe }}+"");
+        summary.textContent=data.pending===1
+          ? {{ i18n.js("web-1-message-waiting-for-an-agent")|safe }}
+          : {{ i18n.js_one("web-inbox-pending-count", "__COUNT__")|safe }}.replace("__COUNT__",String(data.pending));
+        var inboxLabel=data.pending
+          ? {{ i18n.js_one("web-inbox-with-summary", "__SUMMARY__")|safe }}.replace("__SUMMARY__",function(){return summary.textContent;})
+          : {{ i18n.js("web-inbox")|safe }};
+        link.setAttribute("aria-label",inboxLabel);
         list.replaceChildren();data.projects.forEach(function(project){
           var item=document.createElement("li"),a=document.createElement("a"),url=new URL("inbox",document.baseURI);
           url.searchParams.set("workspace",project.workspace);url.searchParams.set("project",project.project);url.searchParams.set("state","pending");
           a.href=url.href;a.textContent=project.workspace+" / "+project.project+" · "+project.pending;a.dataset.notificationProject=project.project;a.dataset.notificationWorkspace=project.workspace;
           item.appendChild(a);list.appendChild(item);
         });
-        if(data.project_count>data.projects.length){var item=document.createElement("li"),a=document.createElement("a");a.href=new URL("inbox",document.baseURI).href;a.textContent=(""+{{ i18n.js("web-view-all")|safe }}+" ")+data.project_count+" projects →";item.appendChild(a);list.appendChild(item);}
+        if(data.project_count>data.projects.length){
+          var item=document.createElement("li"),a=document.createElement("a");
+          a.href=new URL("inbox",document.baseURI).href;
+          a.textContent={{ i18n.js_one("web-inbox-view-all-projects", "__COUNT__")|safe }}.replace("__COUNT__",String(data.project_count));
+          item.appendChild(a);list.appendChild(item);
+        }
       }
       announce(data.pending?summary.textContent:{{ i18n.js("web-no-messages-waiting-for-agents")|safe }});
     }catch(_){if(!stopped)announce({{ i18n.js("web-could-not-refresh-messages-open-inbox-to-check-the-latest-status")|safe }});}

@@ -11,11 +11,11 @@ Defaults that come from a named constant or from another crate say so in the Def
 | Key | Default | Env equivalent | Purpose |
 | --- | --- | --- | --- |
 | `data_dir` | Platform local data directory + `ai-memory` (`dirs::data_local_dir()`) | `AI_MEMORY_DATA_DIR` | Root directory holding `wiki/`, `raw/`, `db/`, `models/` and `logs/`. The config file lives inside it, so `config.default.toml` omits the key by design; `--data-dir` sets it too. |
-| `language` | `"en"` | `AI_MEMORY_LANGUAGE` | Human-facing CLI language (`en` or `pt-BR`); overridden by `--language`. Browser language is per request. |
+| `language` | `"en"` | `AI_MEMORY_LANGUAGE` | Human-facing CLI language (`en`, `pt-BR`, or `zh-CN`). The `--language` flag takes precedence. Browser language is per request. |
 | `bind` | `127.0.0.1:49374` (`DEFAULT_BIND`) | `AI_MEMORY_BIND` | HTTP bind address used by `ai-memory serve`. |
 | `tcp_keepalive_secs` | `60` (`DEFAULT_TCP_KEEPALIVE_SECS`) | `AI_MEMORY_TCP_KEEPALIVE_SECS` | Idle seconds before TCP keepalive probes start on an accepted connection. 0 disables keepalive. |
 | `server_url` | Derived from `bind`; `http://127.0.0.1:49374` for the default bind (`DEFAULT_SERVER_URL`) | `AI_MEMORY_SERVER_URL` | Base URL thin-client commands use to reach the server. |
-| `release_base_url` | unset (the GitHub Releases page of `akitaonrails/ai-memory`) | `AI_MEMORY_RELEASE_BASE_URL` | Releases URL `ai-memory upgrade` downloads from, for mirrors and hermetic tests. |
+| `release_base_url` | unset (the GitHub Releases page of `akurtlua-lgtm/ai-memory`) | `AI_MEMORY_RELEASE_BASE_URL` | Releases URL `ai-memory upgrade` downloads from, for mirrors and hermetic tests. |
 | `base_path` | empty | `AI_MEMORY_BASE_PATH` | URL subpath the server is mounted under, prepended by thin-client commands to `/admin/*` requests. |
 | `log_level` | `info` | `AI_MEMORY_LOG_LEVEL` | Default tracing filter. `RUST_LOG` overrides it. |
 | `allowed_hosts` | `["localhost", "127.0.0.1", "::1"]` | `AI_MEMORY_ALLOWED_HOSTS` | Host header allowlist for the HTTP server (DNS-rebinding defence). |

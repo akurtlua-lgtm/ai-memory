@@ -1,20 +1,22 @@
 # Interface languages
 
-The built-in web interface and human CLI output support English (`en`) and
-Brazilian Portuguese (`pt-BR`). English remains the CLI default.
+The built-in web interface and human CLI output support English (`en`),
+Brazilian Portuguese (`pt-BR`), and Simplified Chinese (`zh-CN`). English is
+the CLI default.
 
 ```sh
-ai-memory --language pt-BR status
-ai-memory --language pt-BR --help
-AI_MEMORY_LANGUAGE=pt-BR ai-memory doctor
+ai-memory --language zh-CN status
+ai-memory --language zh-CN --help
+AI_MEMORY_LANGUAGE=zh-CN ai-memory doctor
 ```
 
-For a persistent terminal preference, set the top-level `language = "pt-BR"`
+For a persistent terminal preference, set the top-level `language = "zh-CN"`
 in `config.toml`. Precedence is `--language`, then `AI_MEMORY_LANGUAGE`, then
 the config file, then English. Help and argument-validation errors work before
 configuration is loaded, so they use the flag or environment preference.
 A `--language` after the harness in `ai-memory run` belongs to that harness,
 just like its other native arguments.
+The Simplified Chinese aliases include `zh`, `zh-Hans`, and `zh-SG`.
 
 The web interface negotiates `Accept-Language` on each request. The language
 selector saves an `ai_memory_language` preference cookie scoped to the
@@ -29,9 +31,15 @@ it to its setup child.
 Localize application-owned interface text, accessible labels, human reports,
 confirmation questions, help, and explanatory error messages. Keep command
 names, flags, identifiers, paths and copied commands intact. Confirmation
-prompts in Portuguese accept `s`/`sim` and `y`/`yes`. A prompt that must
-recognize a refusal, such as the `--yolo` warning, also declines `não`/`nao`
-next to `n`/`no`.
+prompts accept `y`/`yes`, `s`/`sim`, and `是`. Prompts that continue by
+default, such as the `--yolo` warning, accept explicit refusals such as
+`n`/`no`, `não`/`nao`, and `否`.
+
+In Simplified Chinese, keep protocol and product names such as MCP, FTS5,
+RRF, Git, Markdown, and Claude Code in their original form. Use Hook and
+Workstream consistently for the corresponding features. Use Token for model
+usage and Bearer Token for that authentication credential. Translate surrounding
+instructions and familiar labels such as 项目 (project) and 会话 (session).
 
 Do not translate JSON keys or values, MCP payloads, stored pages, conversation
 content, generated agent instructions, generated configuration files, log event
@@ -43,7 +51,7 @@ Bundled product guides and release notes keep their source language.
 
 ### Known gaps
 
-These strings still appear in English under `pt-BR`:
+Some strings still appear in English in translated interfaces:
 
 - Text assembled at runtime and passed along by value, so it never reaches the
   catalog as a known template. The `--jail` summary and the web's invalid-URL
@@ -89,7 +97,7 @@ the values it captured. The failure printed when a command exits, and each cause
 in its chain, go through it automatically. Text it does not recognize stays as
 written, so OS, library and provider details are preserved. Each English value
 in `diagnostics.ftl` must equal the source format string. Adding a `bail!`,
-`anyhow!`, `.context` or `diagnostic` message means adding it to both catalogs;
+`anyhow!`, `.context` or `diagnostic` message means adding it to every catalog;
 the `every_cli_diagnostic_has_a_catalog_entry` test lists anything missing.
 A line printed while the command keeps going that interpolates any value (an
 error, a warning, a workstream, project or profile name) goes through
@@ -154,6 +162,6 @@ cargo test -p ai-memory-web localization --all-features
 Tests validate Fluent syntax, duplicate IDs, language parity, parameter parity,
 CLI help drift, CLI diagnostic coverage, language negotiation and isolation,
 script escaping, selectors that do not depend on translated text, unchanged
-API responses, and the administrative gate with Portuguese HTML. When changing
-browser messages, inspect rendered pages in both languages and check keyboard
+API responses, and the administrative gate with localized HTML. When changing
+browser messages, inspect rendered pages in the affected languages and check keyboard
 navigation, labels, long text and the small-screen layout.

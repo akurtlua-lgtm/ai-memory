@@ -346,7 +346,7 @@ pub struct Config {
     pub server_url_explicit: bool,
     /// Optional override for the GitHub Releases base URL used by
     /// `ai-memory upgrade` (archive + `.sha256` download). Empty/unset
-    /// means `https://github.com/akitaonrails/ai-memory/releases`. Set via
+    /// means `https://github.com/akurtlua-lgtm/ai-memory/releases`. Set via
     /// `AI_MEMORY_RELEASE_BASE_URL` or `release_base_url` in config.toml —
     /// intended for hermetic tests and mirrors, not day-to-day installs.
     #[serde(default)]

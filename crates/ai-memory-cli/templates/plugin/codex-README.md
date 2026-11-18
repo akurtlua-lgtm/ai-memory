@@ -1,7 +1,7 @@
 # ai-memory for Codex
 
 Long-term memory across sessions and coding agents, backed by your own
-[ai-memory](https://github.com/akitaonrails/ai-memory) server.
+[ai-memory](https://github.com/akurtlua-lgtm/ai-memory) server.
 
 This plugin is generated from the ai-memory repository
 (`ai-memory render-plugins`); do not edit it by hand.
@@ -10,7 +10,7 @@ This plugin is generated from the ai-memory repository
 
 The plugin does not contain ai-memory. Install the binary once, separately,
 and run `ai-memory setup` (see the
-[install guide](https://github.com/akitaonrails/ai-memory#install)). Without
+[install guide](https://github.com/akurtlua-lgtm/ai-memory#install)). Without
 the binary the plugin captures nothing and never blocks Codex.
 
 The plugin needs ai-memory 3.0 or later. With an older binary the hooks
@@ -20,7 +20,7 @@ memory tools do not start.
 ## Install
 
 ```sh
-codex plugin marketplace add akitaonrails/ai-memory
+codex plugin marketplace add akurtlua-lgtm/ai-memory
 codex plugin add ai-memory@ai-memory
 ```
 

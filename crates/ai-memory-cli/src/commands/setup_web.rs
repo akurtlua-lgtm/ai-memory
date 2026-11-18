@@ -601,6 +601,19 @@ mod tests {
         (status, headers, String::from_utf8_lossy(&body).into_owned())
     }
 
+    #[tokio::test]
+    async fn setup_page_uses_the_cli_language() {
+        use ai_memory_core::i18n::{Language, Localizer};
+
+        let mut wizard = wizard(recording(0).0);
+        Arc::get_mut(&mut wizard).unwrap().i18n = Localizer::new(Language::ChineseSimplified);
+        let host = format!("127.0.0.1:{PORT}");
+        let (status, _, body) = send(&wizard, get(&path(&wizard, ""), &host)).await;
+        assert_eq!(status, StatusCode::OK);
+        assert!(body.contains("<html lang=\"zh-CN\""));
+        assert!(body.contains("正在加载配置计划"));
+    }
+
     fn legit(wizard: &Wizard, rest: &str, body: &str) -> Request {
         post(wizard, rest)
             .header(header::ORIGIN, format!("http://127.0.0.1:{PORT}"))

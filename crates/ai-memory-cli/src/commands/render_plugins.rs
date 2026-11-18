@@ -24,7 +24,7 @@ use super::render_shared::{CLAUDE_CODE_EVENTS, CODEX_EVENTS};
 use crate::cli::RenderPluginsArgs;
 
 /// The repository the catalogs point at.
-const REPOSITORY_URL: &str = "https://github.com/akitaonrails/ai-memory";
+const REPOSITORY_URL: &str = "https://github.com/akurtlua-lgtm/ai-memory";
 /// The project's landing page, used for every manifest's `homepage`.
 const HOMEPAGE_URL: &str = "https://aimemory.sh";
 /// The marketplace name and the plugin name; installs as `ai-memory@ai-memory`.

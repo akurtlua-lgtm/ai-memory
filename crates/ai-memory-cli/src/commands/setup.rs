@@ -699,7 +699,7 @@ fn parse_answer(answer: &str, agents: usize) -> Result<Answer> {
     let answer = answer.trim();
     if matches!(
         answer,
-        "y" | "Y" | "yes" | "YES" | "Yes" | "s" | "S" | "sim" | "SIM" | "Sim"
+        "y" | "Y" | "yes" | "YES" | "Yes" | "s" | "S" | "sim" | "SIM" | "Sim" | "是"
     ) {
         return Ok(Answer::All);
     }
@@ -1694,6 +1694,8 @@ mod tests {
     fn the_prompt_answer_picks_all_some_or_none_of_the_agents() {
         assert_eq!(parse_answer("y\n", 3).unwrap(), Answer::All);
         assert_eq!(parse_answer("Yes", 1).unwrap(), Answer::All);
+        assert_eq!(parse_answer("是\n", 1).unwrap(), Answer::All);
+        assert!(parse_answer("否\n", 1).is_err());
         assert_eq!(
             parse_answer("3, 1 3\n", 3).unwrap(),
             Answer::Only(vec![1, 3])

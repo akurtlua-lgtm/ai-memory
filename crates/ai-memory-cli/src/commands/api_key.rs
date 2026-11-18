@@ -229,6 +229,7 @@ fn confirm(prompt: &str) -> Result<()> {
         && !trimmed.eq_ignore_ascii_case("yes")
         && !trimmed.eq_ignore_ascii_case("s")
         && !trimmed.eq_ignore_ascii_case("sim")
+        && trimmed != "是"
     {
         bail!("aborted");
     }

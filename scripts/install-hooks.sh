@@ -14,7 +14,7 @@
 #                                                generated-plugin agents print hints)
 #   --to <dir>                               install root (default: $HOME/.ai-memory/hooks)
 #   --ref <release-tag>                      release tag to pull (default: latest)
-#   --repo <owner/repo>                      release repository (default: akitaonrails/ai-memory)
+#   --repo <owner/repo>                      release repository (default: akurtlua-lgtm/ai-memory)
 #
 # After installation, render the matching agent config snippet:
 #   ai-memory install-hooks --agent claude-code --hooks-dir ~/.ai-memory/hooks
@@ -28,7 +28,7 @@ set -euo pipefail
 AGENT="claude-code"
 TO="$HOME/.ai-memory/hooks"
 REF="latest"
-REPO="akitaonrails/ai-memory"
+REPO="akurtlua-lgtm/ai-memory"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in

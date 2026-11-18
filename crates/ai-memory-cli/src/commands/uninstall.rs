@@ -956,7 +956,7 @@ pub fn run(config: &Config, args: UninstallArgs) -> anyhow::Result<()> {
         std::io::stdin().read_line(&mut line).ok();
         if !matches!(
             line.trim().to_lowercase().as_str(),
-            "y" | "yes" | "s" | "sim"
+            "y" | "yes" | "s" | "sim" | "是"
         ) {
             println!("{}", i18n.text("cli-uninstall-aborted"));
             return Ok(());

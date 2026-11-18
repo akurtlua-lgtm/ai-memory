@@ -1,6 +1,6 @@
 # Install the ai-memory release binary for the current Windows user.
 #
-#   irm https://github.com/akitaonrails/ai-memory/releases/latest/download/install.ps1 | iex
+#   irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
 #
 # Downloads ai-memory-windows-x86_64.zip from a GitHub release, verifies it
 # against the release's published .sha256 file, refuses an archive with an
@@ -30,7 +30,7 @@
 function Install-AiMemory {
     $ErrorActionPreference = 'Stop'
     $ProgressPreference = 'SilentlyContinue'
-    $defaultBase = 'https://github.com/akitaonrails/ai-memory/releases'
+    $defaultBase = 'https://github.com/akurtlua-lgtm/ai-memory/releases'
     $asset = 'ai-memory-windows-x86_64.zip'
 
     function Say([string] $message) { Write-Host "ai-memory install: $message" }
