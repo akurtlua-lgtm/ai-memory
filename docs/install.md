@@ -4104,6 +4104,31 @@ In your existing Compose project, set the ai-memory service's `image` to
 then run `docker compose up -d --force-recreate ai-memory`, substituting the
 service name if it differs.
 
+### Switching the upstream Marketplace plugin
+
+If you registered the upstream `ai-memory` Marketplace, switch the
+Marketplace in the harness you used after switching the native binary.
+
+Claude Code:
+
+```sh
+claude plugin uninstall ai-memory@ai-memory
+claude plugin marketplace remove ai-memory
+claude plugin marketplace add akurtlua-lgtm/ai-memory
+claude plugin install ai-memory@ai-memory
+```
+
+Codex:
+
+```sh
+codex plugin remove ai-memory@ai-memory
+codex plugin marketplace remove ai-memory
+codex plugin marketplace add akurtlua-lgtm/ai-memory
+codex plugin add ai-memory@ai-memory
+```
+
+Restart the harness, then review the plugin's hooks in Codex with `/hooks`.
+
 ### Native release binary (Linux / macOS / Windows x86_64)
 
 When `PATH` points at a GitHub-release `ai-memory` binary under a writable

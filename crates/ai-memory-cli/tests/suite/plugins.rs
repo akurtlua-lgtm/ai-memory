@@ -137,7 +137,7 @@ fn plugin_versions_and_catalog_refs_match_the_workspace() {
             assert_eq!(plugin["name"], "ai-memory", "{catalog}");
             assert_eq!(plugin["source"]["ref"], format!("v{VERSION}"), "{catalog}");
             assert_eq!(
-                plugin["source"]["url"], "https://github.com/akitaonrails/ai-memory.git",
+                plugin["source"]["url"], "https://github.com/akurtlua-lgtm/ai-memory.git",
                 "{catalog}"
             );
         }

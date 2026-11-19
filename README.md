@@ -29,7 +29,7 @@ curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/i
 "$HOME/.local/bin/ai-memory" --language zh-CN setup
 ```
 
-Windows 请使用 [PowerShell 安装命令](#windows-two-commands-no-admin)。已经安装上游版的用户可按[切换指南](#从上游版切换到此-fork)保留现有数据。要在终端默认使用中文，在 `config.toml` 顶层添加 `language = "zh-CN"`。网页语言可以在菜单里单独设置。
+Windows 请使用 [PowerShell 安装命令](#windows-two-commands-no-admin)。已经安装上游版的用户可按[切换指南](#从上游版切换到此-fork)保留现有数据。要在终端默认使用中文，在 `config.toml` 中将 `language` 设置为 `"zh-CN"`。网页语言可以在菜单里单独设置。
 
 ### 从上游版切换到此 fork
 
@@ -61,6 +61,8 @@ try {
 继续使用原来的数据目录、`config.toml` 和 Token。升级后重启现有服务。Linux 的 systemd 用户服务用 `systemctl --user restart ai-memory.service`，macOS 的默认 LaunchAgent 用 `launchctl kickstart -k "gui/$(id -u)/com.github.akitaonrails.ai-memory"`，Windows 的默认登录启动项可以通过注销后重新登录来重启。重启后执行 `ai-memory --language zh-CN status`。如果之前显式配置了上游的 `release_base_url` 或 `AI_MEMORY_RELEASE_BASE_URL`，请更新为 fork 的 Releases 地址。
 
 通过 Homebrew、AUR、Scoop、系统包或 Cargo 安装的用户可以[另装 fork 并复用现有数据](docs/install.md#switching-from-the-upstream-package)。Docker 用户可[在原有容器配置中切换镜像](docs/install.md#switching-an-upstream-docker-deployment)。
+
+如果还安装了上游的 Claude Code 或 Codex Marketplace 插件，请[切换插件来源](docs/install.md#switching-the-upstream-marketplace-plugin)。
 
 ## Why ai-memory
 
