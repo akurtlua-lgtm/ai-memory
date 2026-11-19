@@ -57,16 +57,16 @@ Silicon Macs and ARM64 Linux hosts should not need `--platform linux/amd64`.
 
 ## One-step native install (`install.sh` + `ai-memory setup`)
 
-The commands below download packages from a tagged fork release.
-Use [the source installation](../README.md#quick-start) before the first
-tagged release is available.
+The commands below download packages from the fork's latest GitHub Release.
+See [the source installation](../README.md#install-from-source) for a Cargo
+build.
 
 On Linux (x86_64, aarch64) and macOS (Apple Silicon, Intel), two commands go
 from nothing to a running server with your agents wired. Neither needs root.
 
 ```bash
 curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
-ai-memory setup
+"$HOME/.local/bin/ai-memory" setup
 ```
 
 `install.sh` is published with every release, next to its own
@@ -4058,6 +4058,51 @@ Set `AI_MEMORY_NO_VERSION_CHECK=1` to silence the daily check. To pin wrapper
 self-upgrades to a fork or tagged release, set `AI_MEMORY_WRAPPER_URL=<url>`;
 the wrapper requires `<url>.sha256` unless
 `AI_MEMORY_WRAPPER_SHA256_URL=<checksum-url>` is also set.
+
+### Switching from the upstream package
+
+If you installed an upstream GitHub Release in a writable user directory,
+use the [in-place migration](../README.md#从上游版切换到此-fork). For Homebrew,
+AUR, Scoop, system packages or Cargo, back up your data with
+`ai-memory backup --to ai-memory-before-fork.tar.gz` while the old server
+is running. Install the fork in a separate user directory.
+
+```bash
+curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh |
+  AI_MEMORY_BIN_DIR="$HOME/.local/ai-memory-fork/bin" \
+  AI_MEMORY_LIB_DIR="$HOME/.local/ai-memory-fork/lib" sh
+"$HOME/.local/ai-memory-fork/bin/ai-memory" --language zh-CN setup --plan
+```
+
+```powershell
+$env:AI_MEMORY_INSTALL_DIR = "$env:LOCALAPPDATA\Programs\ai-memory-fork"
+$env:AI_MEMORY_NO_MODIFY_PATH = '1'
+irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
+& "$env:AI_MEMORY_INSTALL_DIR\ai-memory.exe" --language zh-CN setup --plan
+```
+
+If the upstream server used a custom location, pass its original
+`--data-dir` and `--config` to the fork before `setup`. Confirm the plan
+points at the existing data, then stop the upstream service using its
+service manager. Run the fork's setup command again without `--plan`.
+If you manage the service yourself, keep its existing arguments and update
+its executable path to the fork before starting it. Run the fork by its
+full path until you have updated your shell's `PATH`.
+
+### Switching an upstream Docker deployment
+
+Build the image from the fork's published tag.
+
+```bash
+git clone --branch v3.4.7 https://github.com/akurtlua-lgtm/ai-memory.git ai-memory-fork
+docker build --target runtime-source --build-arg AI_MEMORY_FEATURES=management-ui \
+  -f ai-memory-fork/docker/Dockerfile -t ai-memory:fork-v3.4.7 ai-memory-fork
+```
+
+In your existing Compose project, set the ai-memory service's `image` to
+`ai-memory:fork-v3.4.7`. Keep the existing `/data` volume and configuration,
+then run `docker compose up -d --force-recreate ai-memory`, substituting the
+service name if it differs.
 
 ### Native release binary (Linux / macOS / Windows x86_64)
 

@@ -22,15 +22,45 @@
 
 这是 [akitaonrails/ai-memory](https://github.com/akitaonrails/ai-memory) 的中文 fork。ai-memory 为 Codex、Claude Code 等编程智能体保留项目记忆和跨会话交接记录，支持用中文录入和检索记忆。此 fork 提供简体中文 CLI、网页、管理控制台和安装向导。MCP、FTS5、Hook、Workstream、Token 等术语沿用英文。
 
-有 Rust 1.95 的环境可以直接从本仓库安装。安装后先用 `--plan` 查看将接入的智能体和服务，再运行安装向导。
+Linux 和 macOS 可以直接安装 [GitHub Release](https://github.com/akurtlua-lgtm/ai-memory/releases/latest)。安装后可先用 `setup --plan` 查看将接入的智能体和服务。
 
 ```bash
-cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
-ai-memory --language zh-CN setup --plan
-ai-memory --language zh-CN setup
+curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
+"$HOME/.local/bin/ai-memory" --language zh-CN setup
 ```
 
-要在终端默认使用中文，在 `config.toml` 顶层添加 `language = "zh-CN"`。网页语言可以在菜单里单独设置。预编译包和源码构建说明见 [Quick start](#quick-start) 和 [Release builds](#release-builds)。
+Windows 请使用 [PowerShell 安装命令](#windows-two-commands-no-admin)。已经安装上游版的用户可按[切换指南](#从上游版切换到此-fork)保留现有数据。要在终端默认使用中文，在 `config.toml` 顶层添加 `language = "zh-CN"`。网页语言可以在菜单里单独设置。
+
+### 从上游版切换到此 fork
+
+如果原来通过上游 GitHub Release 安装在用户目录，先在旧服务运行时备份，再原地替换。上游和 fork 的版本号都是 `3.4.7`，所以这里指定 Tag 并加上 `--force`。
+
+```bash
+ai-memory backup --to "$PWD/ai-memory-before-fork.tar.gz" &&
+AI_MEMORY_RELEASE_BASE_URL=https://github.com/akurtlua-lgtm/ai-memory/releases \
+  ai-memory upgrade --version v3.4.7 --force &&
+ai-memory --language zh-CN --help
+```
+
+Windows PowerShell 对应命令如下。备份成功后再执行升级。
+
+```powershell
+ai-memory backup --to "$PWD\ai-memory-before-fork.tar.gz"
+if ($LASTEXITCODE -ne 0) { throw '备份失败' }
+$previousReleaseBase = $env:AI_MEMORY_RELEASE_BASE_URL
+try {
+    $env:AI_MEMORY_RELEASE_BASE_URL = 'https://github.com/akurtlua-lgtm/ai-memory/releases'
+    ai-memory upgrade --version v3.4.7 --force
+    if ($LASTEXITCODE -ne 0) { throw '升级失败' }
+    ai-memory --language zh-CN --help
+} finally {
+    $env:AI_MEMORY_RELEASE_BASE_URL = $previousReleaseBase
+}
+```
+
+继续使用原来的数据目录、`config.toml` 和 Token。升级后重启现有服务。Linux 的 systemd 用户服务用 `systemctl --user restart ai-memory.service`，macOS 的默认 LaunchAgent 用 `launchctl kickstart -k "gui/$(id -u)/com.github.akitaonrails.ai-memory"`，Windows 的默认登录启动项可以通过注销后重新登录来重启。重启后执行 `ai-memory --language zh-CN status`。如果之前显式配置了上游的 `release_base_url` 或 `AI_MEMORY_RELEASE_BASE_URL`，请更新为 fork 的 Releases 地址。
+
+通过 Homebrew、AUR、Scoop、系统包或 Cargo 安装的用户可以[另装 fork 并复用现有数据](docs/install.md#switching-from-the-upstream-package)。Docker 用户可[在原有容器配置中切换镜像](docs/install.md#switching-an-upstream-docker-deployment)。
 
 ## Why ai-memory
 
@@ -231,21 +261,15 @@ differs, and the published benchmark, is in [How ai-memory compares](docs/compar
 
 ## Quick start
 
-The first tagged release will make the installers below available. The [fork's
-Releases page](https://github.com/akurtlua-lgtm/ai-memory/releases) lists published
-versions. You can install from source with Rust 1.95 today and rerun the same
-`cargo install` command to update a source installation.
-
-```bash
-cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
-ai-memory setup
-```
+The [fork's Releases page](https://github.com/akurtlua-lgtm/ai-memory/releases)
+has prebuilt packages and SHA-256 checksums. For Rust 1.95 source builds, see
+[Install from source](#install-from-source).
 
 ### Linux and macOS (two commands, no root)
 
 ```bash
 curl -fsSL https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.sh | sh
-ai-memory setup
+"$HOME/.local/bin/ai-memory" setup
 ```
 
 `install.sh` downloads the release for your OS and CPU, checks it against the
@@ -265,8 +289,7 @@ variables and how to verify the script before running it are in
 An AI agent installing ai-memory for you can follow
 [`INSTALL_FOR_AGENTS.md`](INSTALL_FOR_AGENTS.md).
 
-After a tagged release is available, Claude Code and Codex users can install
-the fork's marketplace plugin as well as the native binary.
+Claude Code and Codex users can also install the fork's marketplace plugin.
 
 ```bash
 claude plugin marketplace add akurtlua-lgtm/ai-memory && claude plugin install ai-memory@ai-memory
@@ -282,7 +305,7 @@ In PowerShell:
 
 ```powershell
 irm https://github.com/akurtlua-lgtm/ai-memory/releases/latest/download/install.ps1 | iex
-ai-memory setup
+& "$env:LOCALAPPDATA\Programs\ai-memory\ai-memory.exe" setup
 ```
 
 `install.ps1` checks the release zip against its published SHA-256 checksum,
@@ -303,6 +326,15 @@ ai-memory setup
 ```
 
 Update it with `scoop update ai-memory`.
+
+### Install from source
+
+```bash
+cargo +1.95 install --locked --git https://github.com/akurtlua-lgtm/ai-memory --branch main --features management-ui ai-memory-cli
+ai-memory setup
+```
+
+Rerun the same `cargo install` command to update a source installation.
 
 ### Arch Linux (upstream AUR packages)
 

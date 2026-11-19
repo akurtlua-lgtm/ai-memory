@@ -603,9 +603,25 @@ jobs:
             sha256sum install.ps1 > install.ps1.sha256
           )
 
+      - name: Verify assets before publication
+        working-directory: artifacts
+        run: |
+          for asset in *; do
+            case "$asset" in
+              *.sha256) sha256sum --strict -c "$asset" ;;
+              *) test -f "$asset.sha256" ;;
+            esac
+          done
+
       - name: Generate release body
         run: |
-          echo "## Checksums (SHA256)" > body.md
+          : > body.md
+          if [ "$GITHUB_REPOSITORY" = 'akurtlua-lgtm/ai-memory' ]; then
+            echo '简体中文 CLI、Web UI、管理控制台和安装向导。支持中文记忆检索。' >> body.md
+            echo "已安装上游版的用户可参考[迁移命令]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/blob/$GITHUB_REF_NAME/README.md#从上游版切换到此-fork)，复用原有数据和配置。" >> body.md
+            echo >> body.md
+          fi
+          echo "## Checksums (SHA256)" >> body.md
           echo '```' >> body.md
           cat artifacts/*.sha256 >> body.md
           echo '```' >> body.md
@@ -640,6 +656,45 @@ jobs:
             --title "$GITHUB_REF_NAME" \
             --notes-file body.md \
             --latest
+
+  published-install:
+    name: Install published release (${{ matrix.runner }})
+    needs: [github-release, validate-version]
+    if: github.repository == 'akurtlua-lgtm/ai-memory'
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-22.04, ubuntu-22.04-arm, macos-15, macos-15-intel, windows-latest]
+    env:
+      RELEASE_BASE: ${{ github.server_url }}/${{ github.repository }}/releases
+      EXPECTED_VERSION: ${{ needs.validate-version.outputs.version }}
+    steps:
+      - name: Run the Linux and macOS README installer
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          export AI_MEMORY_BIN_DIR="$RUNNER_TEMP/ai-memory-install/bin"
+          export AI_MEMORY_LIB_DIR="$RUNNER_TEMP/ai-memory-install/lib"
+          curl -fsSL "$RELEASE_BASE/latest/download/install.sh" | sh
+          bin="$AI_MEMORY_BIN_DIR/ai-memory"
+          test "$("$bin" --version)" = "ai-memory $EXPECTED_VERSION"
+          "$bin" --language zh-CN --help | grep -F '用法：'
+
+      - name: Run the Windows README installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:AI_MEMORY_INSTALL_DIR = Join-Path $env:RUNNER_TEMP 'ai-memory-install'
+          $env:AI_MEMORY_NO_MODIFY_PATH = '1'
+          irm "$env:RELEASE_BASE/latest/download/install.ps1" | iex
+          $bin = Join-Path $env:AI_MEMORY_INSTALL_DIR 'ai-memory.exe'
+          if ((& $bin --version) -ne "ai-memory $env:EXPECTED_VERSION") {
+              throw 'Unexpected installed version'
+          }
+          if (-not (& $bin --language zh-CN --help | Select-String -SimpleMatch '用法：')) {
+              throw 'Installed binary is missing Chinese help'
+          }
 
   aur:
     name: aur publish
